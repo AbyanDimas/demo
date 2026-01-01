@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Belajar Siswa - LMS</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Roboto & Product Sans look-alike) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f3f4f6;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7c7c7; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8; 
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-item.active {
+            background-color: #e8f0fe; /* Google Blue Light */
+            color: #1967d2; /* Google Blue */
+            font-weight: 500;
+        }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="text-gray-800 h-screen flex overflow-hidden">
+
+    <!-- SIDEBAR (Desktop) -->
+    <aside class="bg-white w-64 border-r border-gray-200 hidden md:flex flex-col z-20 shadow-sm">
+        <div class="h-16 flex items-center px-6 border-b border-gray-200">
+            <div class="flex items-center gap-2 text-blue-600 font-bold text-xl">
+                <i class="fa-solid fa-shapes"></i>
+                <span>Belajar.id</span>
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1 px-3">
+                <li>
+                    <button onclick="switchTab('dashboard')" id="btn-dashboard" class="nav-item active w-full flex items-center gap-3 px-3 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                        <i class="fa-solid fa-house w-5 text-center"></i>
+                        <span>Beranda</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchTab('courses')" id="btn-courses" class="nav-item w-full flex items-center gap-3 px-3 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                        <i class="fa-solid fa-book-open w-5 text-center"></i>
+                        <span>Kelas Saya</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchTab('assignments')" id="btn-assignments" class="nav-item w-full flex items-center gap-3 px-3 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                        <i class="fa-solid fa-clipboard-list w-5 text-center"></i>
+                        <span>Tugas</span>
+                        <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">5</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchTab('grades')" id="btn-grades" class="nav-item w-full flex items-center gap-3 px-3 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                        <i class="fa-solid fa-chart-bar w-5 text-center"></i>
+                        <span>Nilai</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchTab('calendar')" id="btn-calendar" class="nav-item w-full flex items-center gap-3 px-3 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                        <i class="fa-regular fa-calendar w-5 text-center"></i>
+                        <span>Kalender</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="p-4 border-t border-gray-200">
+            <button onclick="showLogoutModal()" class="w-full flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Keluar</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MOBILE SIDEBAR OVERLAY -->
+    <div id="mobile-sidebar-overlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden"></div>
+    <aside id="mobile-sidebar" class="fixed inset-y-0 left-0 w-64 bg-white transform -translate-x-full transition-transform duration-300 ease-in-out z-40 md:hidden flex flex-col h-full shadow-lg">
+        <div class="h-16 flex items-center justify-between px-6 border-b border-gray-200">
+            <div class="flex items-center gap-2 text-blue-600 font-bold text-xl">
+                <i class="fa-solid fa-shapes"></i>
+                <span>Belajar.id</span>
+            </div>
+            <button onclick="toggleMobileMenu()" class="text-gray-500 hover:text-gray-700">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+        <nav class="flex-1 py-4 px-3">
+            <ul class="space-y-1">
+                <li><button onclick="switchTab('dashboard'); toggleMobileMenu()" class="w-full text-left px-3 py-3 rounded-lg hover:bg-gray-100"><i class="fa-solid fa-house w-6"></i> Beranda</button></li>
+                <li><button onclick="switchTab('courses'); toggleMobileMenu()" class="w-full text-left px-3 py-3 rounded-lg hover:bg-gray-100"><i class="fa-solid fa-book-open w-6"></i> Kelas Saya</button></li>
+                <li><button onclick="switchTab('assignments'); toggleMobileMenu()" class="w-full text-left px-3 py-3 rounded-lg hover:bg-gray-100"><i class="fa-solid fa-clipboard-list w-6"></i> Tugas</button></li>
+                <li><button onclick="switchTab('grades'); toggleMobileMenu()" class="w-full text-left px-3 py-3 rounded-lg hover:bg-gray-100"><i class="fa-solid fa-chart-bar w-6"></i> Nilai</button></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+        
+        <!-- HEADER -->
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 md:px-8 shadow-sm z-10">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleMobileMenu()" class="md:hidden text-gray-600 hover:text-blue-600">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <h1 id="page-title" class="text-xl font-semibold text-gray-700 hidden sm:block">Beranda</h1>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <!-- Search -->
+                <div class="hidden md:flex items-center bg-gray-100 rounded-lg px-3 py-2 w-64">
+                    <i class="fa-solid fa-magnifying-glass text-gray-400 mr-2"></i>
+                    <input type="text" placeholder="Cari materi, tugas, guru..." class="bg-transparent border-none outline-none text-sm w-full">
+                </div>
+
+                <!-- Notifications -->
+                <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full">
+                    <i class="fa-regular fa-bell text-lg"></i>
+                    <span class="absolute top-1 right-1 h-2.5 w-2.5 bg-red-500 rounded-full border border-white"></span>
+                </button>
+
+                <!-- Profile -->
+                <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded-lg border border-transparent hover:border-gray-200">
+                    <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
+                        AD
+                    </div>
+                    <span class="text-sm font-medium text-gray-700 hidden md:block">Adit D.</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENT AREA -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4 md:p-8">
+            
+            <!-- 1. DASHBOARD TAB -->
+            <section id="dashboard-tab" class="fade-in block">
+                <!-- Welcome Banner -->
+                <div class="bg-gradient-to-r from-blue-600 to-blue-400 rounded-2xl p-6 text-white mb-8 shadow-lg relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h2 class="text-2xl font-bold mb-2">Selamat Pagi, Adit! 👋</h2>
+                        <p class="opacity-90">Kamu memiliki <span class="font-bold text-yellow-200">5 tugas</span> pending minggu ini. Tetap semangat dan jaga kesehatan!</p>
+                        <div class="flex gap-2 mt-4">
+                            <button onclick="switchTab('assignments')" class="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-100 transition shadow-sm">Lihat Tugasku</button>
+                            <button class="bg-blue-500 text-white border border-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-blue-600 transition">Jadwal Ujian</button>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-graduation-cap absolute -bottom-4 -right-4 text-9xl text-white opacity-20"></i>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold">24</div>
+                            <div class="text-gray-500 text-sm">Materi Selesai</div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold">5</div>
+                            <div class="text-gray-500 text-sm">Tugas Pending</div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold">88.5</div>
+                            <div class="text-gray-500 text-sm">Rata-rata Nilai</div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-user-xmark"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold">0</div>
+                            <div class="text-gray-500 text-sm">Ketidakhadiran</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jadwal Hari Ini (Extended) -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg text-gray-800">Jadwal Hari Ini (Senin)</h3>
+                        <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">20 Oktober 2024</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4 p-3 bg-blue-50 border border-blue-100 rounded-lg transition">
+                            <div class="text-center min-w-[60px]">
+                                <div class="font-bold text-blue-800">07:00</div>
+                                <div class="text-xs text-blue-600">Upacara</div>
+                            </div>
+                            <div class="w-1 bg-blue-500 rounded-full self-stretch"></div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Upacara Bendera</h4>
+                                <p class="text-sm text-gray-500">Lapangan Utama</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-3 hover:bg-gray-50 rounded-lg transition">
+                            <div class="text-center min-w-[60px]">
+                                <div class="font-bold text-gray-800">08:00</div>
+                                <div class="text-xs text-gray-500">WIB</div>
+                            </div>
+                            <div class="w-1 bg-green-500 rounded-full self-stretch"></div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Matematika Wajib</h4>
+                                <p class="text-sm text-gray-500">Bab 4: Statistik dan Peluang • Pak Budi</p>
+                                <span class="inline-block mt-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Sedang Berlangsung</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-3 hover:bg-gray-50 rounded-lg transition">
+                            <div class="text-center min-w-[60px]">
+                                <div class="font-bold text-gray-800">09:30</div>
+                                <div class="text-xs text-gray-500">WIB</div>
+                            </div>
+                            <div class="w-1 bg-gray-300 rounded-full self-stretch"></div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Istirahat</h4>
+                                <p class="text-sm text-gray-500">Kantin / Perpustakaan</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-3 hover:bg-gray-50 rounded-lg transition">
+                            <div class="text-center min-w-[60px]">
+                                <div class="font-bold text-gray-800">10:00</div>
+                                <div class="text-xs text-gray-500">WIB</div>
+                            </div>
+                            <div class="w-1 bg-gray-300 rounded-full self-stretch"></div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Bahasa Indonesia</h4>
+                                <p class="text-sm text-gray-500">Analisis Teks Editorial • Bu Siti</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-3 hover:bg-gray-50 rounded-lg transition">
+                            <div class="text-center min-w-[60px]">
+                                <div class="font-bold text-gray-800">12:30</div>
+                                <div class="text-xs text-gray-500">WIB</div>
+                            </div>
+                            <div class="w-1 bg-gray-300 rounded-full self-stretch"></div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Fisika Dasar</h4>
+                                <p class="text-sm text-gray-500">Lab Fisika • Pak Albert</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. COURSES TAB -->
+            <section id="courses-tab" class="hidden fade-in">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Mata Pelajaran</h2>
+                    <select class="bg-white border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2">
+                        <option>Semester Ganjil 2024</option>
+                        <option>Semester Genap 2024</option>
+                    </select>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-8">
+                    <!-- Card 1: Math -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden course-card transition-all duration-300">
+                        <div class="h-32 bg-indigo-600 relative p-4 flex items-end">
+                            <h3 class="text-white font-bold text-xl relative z-10">Matematika</h3>
+                            <i class="fa-solid fa-calculator absolute top-4 right-4 text-white opacity-20 text-6xl"></i>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-gray-500 mb-4">Pengajar: Pak Budi Santoso</p>
+                            <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Progress</span><span>75%</span></div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mb-4"><div class="bg-indigo-600 h-2 rounded-full" style="width: 75%"></div></div>
+                            <button onclick="showMessage('Membuka Kelas Matematika...')" class="w-full border border-indigo-600 text-indigo-600 py-2 rounded-lg hover:bg-indigo-50 transition">Buka Kelas</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Bio -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden course-card transition-all duration-300">
+                        <div class="h-32 bg-emerald-600 relative p-4 flex items-end">
+                            <h3 class="text-white font-bold text-xl relative z-10">Biologi</h3>
+                            <i class="fa-solid fa-dna absolute top-4 right-4 text-white opacity-20 text-6xl"></i>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-gray-500 mb-4">Pengajar: Bu Ratna Sari</p>
+                            <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Progress</span><span>40%</span></div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mb-4"><div class="bg-emerald-600 h-2 rounded-full" style="width: 40%"></div></div>
+                            <button onclick="showMessage('Membuka Kelas Biologi...')" class="w-full border border-emerald-600 text-emerald-600 py-2 rounded-lg hover:bg-emerald-50 transition">Buka Kelas</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: English -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden course-card transition-all duration-300">
+                        <div class="h-32 bg-rose-600 relative p-4 flex items-end">
+                            <h3 class="text-white font-bold text-xl relative z-10">Bahasa Inggris</h3>
+                            <i class="fa-solid fa-earth-americas absolute top-4 right-4 text-white opacity-20 text-6xl"></i>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-gray-500 mb-4">Pengajar: Mr. John Doe</p>
+                            <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Progress</span><span>90%</span></div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mb-4"><div class="bg-rose-600 h-2 rounded-full" style="width: 90%"></div></div>
+                            <button onclick="showMessage('Membuka Kelas B. Inggris...')" class="w-full border border-rose-600 text-rose-600 py-2 rounded-lg hover:bg-rose-50 transition">Buka Kelas</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Physics -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden course-card transition-all duration-300">
+                        <div class="h-32 bg-blue-500 relative p-4 flex items-end">
+                            <h3 class="text-white font-bold text-xl relative z-10">Fisika</h3>
+                            <i class="fa-solid fa-atom absolute top-4 right-4 text-white opacity-20 text-6xl"></i>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-gray-500 mb-4">Pengajar: Pak Albert</p>
+                            <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Progress</span><span>60%</span></div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mb-4"><div class="bg-blue-500 h-2 rounded-full" style="width: 60%"></div></div>
+                            <button onclick="showMessage('Membuka Kelas Fisika...')" class="w-full border border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-50 transition">Buka Kelas</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Chemistry -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden course-card transition-all duration-300">
+                        <div class="h-32 bg-yellow-500 relative p-4 flex items-end">
+                            <h3 class="text-white font-bold text-xl relative z-10">Kimia</h3>
+                            <i class="fa-solid fa-flask absolute top-4 right-4 text-white opacity-20 text-6xl"></i>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-gray-500 mb-4">Pengajar: Bu Marie</p>
+                            <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Progress</span><span>30%</span></div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mb-4"><div class="bg-yellow-500 h-2 rounded-full" style="width: 30%"></div></div>
+                            <button onclick="showMessage('Membuka Kelas Kimia...')" class="w-full border border-yellow-500 text-yellow-500 py-2 rounded-lg hover:bg-yellow-50 transition">Buka Kelas</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: History -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden course-card transition-all duration-300">
+                        <div class="h-32 bg-amber-700 relative p-4 flex items-end">
+                            <h3 class="text-white font-bold text-xl relative z-10">Sejarah</h3>
+                            <i class="fa-solid fa-landmark absolute top-4 right-4 text-white opacity-20 text-6xl"></i>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-gray-500 mb-4">Pengajar: Pak Soekarno</p>
+                            <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Progress</span><span>85%</span></div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mb-4"><div class="bg-amber-700 h-2 rounded-full" style="width: 85%"></div></div>
+                            <button onclick="showMessage('Membuka Kelas Sejarah...')" class="w-full border border-amber-700 text-amber-700 py-2 rounded-lg hover:bg-amber-50 transition">Buka Kelas</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 7: Arts -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden course-card transition-all duration-300">
+                        <div class="h-32 bg-purple-500 relative p-4 flex items-end">
+                            <h3 class="text-white font-bold text-xl relative z-10">Seni Budaya</h3>
+                            <i class="fa-solid fa-palette absolute top-4 right-4 text-white opacity-20 text-6xl"></i>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-gray-500 mb-4">Pengajar: Bu Affandi</p>
+                            <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Progress</span><span>100%</span></div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mb-4"><div class="bg-purple-500 h-2 rounded-full" style="width: 100%"></div></div>
+                            <button onclick="showMessage('Membuka Kelas Seni...')" class="w-full border border-purple-500 text-purple-500 py-2 rounded-lg hover:bg-purple-50 transition">Buka Kelas</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 8: PE -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden course-card transition-all duration-300">
+                        <div class="h-32 bg-orange-500 relative p-4 flex items-end">
+                            <h3 class="text-white font-bold text-xl relative z-10">PJOK</h3>
+                            <i class="fa-solid fa-basketball absolute top-4 right-4 text-white opacity-20 text-6xl"></i>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-gray-500 mb-4">Pengajar: Pak Jordan</p>
+                            <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Progress</span><span>50%</span></div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mb-4"><div class="bg-orange-500 h-2 rounded-full" style="width: 50%"></div></div>
+                            <button onclick="showMessage('Membuka Kelas PJOK...')" class="w-full border border-orange-500 text-orange-500 py-2 rounded-lg hover:bg-orange-50 transition">Buka Kelas</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 9: Computer Science -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden course-card transition-all duration-300">
+                        <div class="h-32 bg-slate-700 relative p-4 flex items-end">
+                            <h3 class="text-white font-bold text-xl relative z-10">Informatika</h3>
+                            <i class="fa-solid fa-laptop-code absolute top-4 right-4 text-white opacity-20 text-6xl"></i>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-sm text-gray-500 mb-4">Pengajar: Bu Turing</p>
+                            <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Progress</span><span>20%</span></div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mb-4"><div class="bg-slate-700 h-2 rounded-full" style="width: 20%"></div></div>
+                            <button onclick="showMessage('Membuka Kelas Informatika...')" class="w-full border border-slate-700 text-slate-700 py-2 rounded-lg hover:bg-slate-50 transition">Buka Kelas</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. ASSIGNMENTS TAB -->
+            <section id="assignments-tab" class="hidden fade-in">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Daftar Tugas</h2>
+                    <div class="flex gap-2">
+                        <button class="px-3 py-1 bg-white border rounded text-sm hover:bg-gray-50">Semua</button>
+                        <button class="px-3 py-1 bg-white border rounded text-sm hover:bg-gray-50">Pending</button>
+                        <button class="px-3 py-1 bg-white border rounded text-sm hover:bg-gray-50">Selesai</button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Nama Tugas</th>
+                                    <th scope="col" class="px-6 py-3">Mata Pelajaran</th>
+                                    <th scope="col" class="px-6 py-3">Tenggat Waktu</th>
+                                    <th scope="col" class="px-6 py-3">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Item 1 -->
+                                <tr class="bg-white border-b hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-medium text-gray-900">
+                                        <div class="flex items-center gap-3">
+                                            <div class="bg-blue-100 p-2 rounded text-blue-600"><i class="fa-solid fa-file-lines"></i></div>
+                                            Latihan Soal Statistik
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">Matematika</td>
+                                    <td class="px-6 py-4 text-red-600 font-medium">Hari ini, 23:59</td>
+                                    <td class="px-6 py-4"><span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Pending</span></td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button onclick="openUploadModal('Latihan Soal Statistik')" class="bg-blue-600 text-white px-3 py-1.5 rounded text-xs hover:bg-blue-700 transition">Kerjakan</button>
+                                    </td>
+                                </tr>
+                                <!-- Item 2 -->
+                                <tr class="bg-white border-b hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-medium text-gray-900">
+                                        <div class="flex items-center gap-3">
+                                            <div class="bg-purple-100 p-2 rounded text-purple-600"><i class="fa-solid fa-video"></i></div>
+                                            Presentasi Sel Hewan
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">Biologi</td>
+                                    <td class="px-6 py-4">Besok, 12:00</td>
+                                    <td class="px-6 py-4"><span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Pending</span></td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button onclick="openUploadModal('Presentasi Sel Hewan')" class="bg-blue-600 text-white px-3 py-1.5 rounded text-xs hover:bg-blue-700 transition">Kerjakan</button>
+                                    </td>
+                                </tr>
+                                <!-- Item 3 -->
+                                <tr class="bg-white border-b hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-medium text-gray-900">
+                                        <div class="flex items-center gap-3">
+                                            <div class="bg-slate-100 p-2 rounded text-slate-600"><i class="fa-solid fa-code"></i></div>
+                                            Coding HTML Dasar
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">Informatika</td>
+                                    <td class="px-6 py-4 text-orange-600 font-medium">Lusa, 15:00</td>
+                                    <td class="px-6 py-4"><span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Pending</span></td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button onclick="openUploadModal('Coding HTML Dasar')" class="bg-blue-600 text-white px-3 py-1.5 rounded text-xs hover:bg-blue-700 transition">Kerjakan</button>
+                                    </td>
+                                </tr>
+                                <!-- Item 4 -->
+                                <tr class="bg-white border-b hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-medium text-gray-900">
+                                        <div class="flex items-center gap-3">
+                                            <div class="bg-blue-100 p-2 rounded text-blue-600"><i class="fa-solid fa-file-pdf"></i></div>
+                                            Laporan Praktikum Hukum Newton
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">Fisika</td>
+                                    <td class="px-6 py-4 text-gray-500">2 Hari lagi</td>
+                                    <td class="px-6 py-4"><span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Pending</span></td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button onclick="openUploadModal('Laporan Praktikum Fisika')" class="bg-blue-600 text-white px-3 py-1.5 rounded text-xs hover:bg-blue-700 transition">Kerjakan</button>
+                                    </td>
+                                </tr>
+                                <!-- Item 5 -->
+                                <tr class="bg-white border-b hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-medium text-gray-900">
+                                        <div class="flex items-center gap-3">
+                                            <div class="bg-orange-100 p-2 rounded text-orange-600"><i class="fa-solid fa-person-running"></i></div>
+                                            Video Senam Lantai
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">PJOK</td>
+                                    <td class="px-6 py-4 text-gray-500">3 Hari lagi</td>
+                                    <td class="px-6 py-4"><span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Pending</span></td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button onclick="openUploadModal('Video Senam Lantai')" class="bg-blue-600 text-white px-3 py-1.5 rounded text-xs hover:bg-blue-700 transition">Kerjakan</button>
+                                    </td>
+                                </tr>
+                                <!-- Item 6 (Completed) -->
+                                <tr class="bg-white border-b hover:bg-gray-50 opacity-75">
+                                    <td class="px-6 py-4 font-medium text-gray-900">
+                                        <div class="flex items-center gap-3">
+                                            <div class="bg-amber-100 p-2 rounded text-amber-700"><i class="fa-solid fa-book"></i></div>
+                                            Makalah Perang Diponegoro
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">Sejarah</td>
+                                    <td class="px-6 py-4 text-gray-500">Kemarin</td>
+                                    <td class="px-6 py-4"><span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Diserahkan</span></td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button class="text-gray-500 text-xs cursor-default">Menunggu Nilai</button>
+                                    </td>
+                                </tr>
+                                <!-- Item 7 (Graded) -->
+                                <tr class="bg-white border-b hover:bg-gray-50 opacity-60">
+                                    <td class="px-6 py-4 font-medium text-gray-900">
+                                        <div class="flex items-center gap-3">
+                                            <div class="bg-green-100 p-2 rounded text-green-600"><i class="fa-solid fa-check"></i></div>
+                                            Essay "My Holiday"
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">B. Inggris</td>
+                                    <td class="px-6 py-4">15 Okt 2024</td>
+                                    <td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Nilai: 88</span></td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button class="text-blue-600 hover:underline text-xs">Lihat Hasil</button>
+                                    </td>
+                                </tr>
+                                <!-- Item 8 (Graded) -->
+                                <tr class="bg-white border-b hover:bg-gray-50 opacity-60">
+                                    <td class="px-6 py-4 font-medium text-gray-900">
+                                        <div class="flex items-center gap-3">
+                                            <div class="bg-yellow-100 p-2 rounded text-yellow-600"><i class="fa-solid fa-flask"></i></div>
+                                            Hafalan Tabel Periodik
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">Kimia</td>
+                                    <td class="px-6 py-4">10 Okt 2024</td>
+                                    <td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Nilai: 90</span></td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button class="text-blue-600 hover:underline text-xs">Lihat Hasil</button>
+                                    </td>
+                                </tr>
+                                <!-- Item 9 (Late) -->
+                                <tr class="bg-white hover:bg-gray-50 border-b">
+                                    <td class="px-6 py-4 font-medium text-gray-900">
+                                        <div class="flex items-center gap-3">
+                                            <div class="bg-purple-100 p-2 rounded text-purple-600"><i class="fa-solid fa-palette"></i></div>
+                                            Lukisan Abstrak
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">Seni Budaya</td>
+                                    <td class="px-6 py-4 text-red-600 font-bold">12 Okt 2024</td>
+                                    <td class="px-6 py-4"><span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">Terlambat</span></td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button onclick="openUploadModal('Lukisan Abstrak (Susulan)')" class="text-red-600 hover:underline text-xs">Kirim Susulan</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. GRADES TAB -->
+            <section id="grades-tab" class="hidden fade-in">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Rekap Nilai</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Chart Simulation -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h3 class="font-bold text-gray-700 mb-4">Grafik Performa Akademik</h3>
+                        <div class="flex items-end justify-between h-48 gap-2 px-2 border-b border-gray-100 pb-2">
+                            <!-- Bar 1 -->
+                            <div class="w-full flex flex-col items-center gap-1 group">
+                                <div class="w-full bg-blue-100 rounded-t-lg relative h-40 w-8">
+                                    <div class="absolute bottom-0 w-full bg-blue-500 rounded-t-lg transition-all duration-1000" style="height: 80%"></div>
+                                    <div class="absolute -top-6 w-full text-center text-xs font-bold text-gray-600 opacity-0 group-hover:opacity-100">80</div>
+                                </div>
+                                <span class="text-xs text-gray-500 font-bold">MTK</span>
+                            </div>
+                            <!-- Bar 2 -->
+                            <div class="w-full flex flex-col items-center gap-1 group">
+                                <div class="w-full bg-blue-100 rounded-t-lg relative h-40 w-8">
+                                    <div class="absolute bottom-0 w-full bg-emerald-500 rounded-t-lg transition-all duration-1000" style="height: 95%"></div>
+                                    <div class="absolute -top-6 w-full text-center text-xs font-bold text-gray-600 opacity-0 group-hover:opacity-100">95</div>
+                                </div>
+                                <span class="text-xs text-gray-500 font-bold">BIO</span>
+                            </div>
+                            <!-- Bar 3 -->
+                            <div class="w-full flex flex-col items-center gap-1 group">
+                                <div class="w-full bg-blue-100 rounded-t-lg relative h-40 w-8">
+                                    <div class="absolute bottom-0 w-full bg-rose-500 rounded-t-lg transition-all duration-1000" style="height: 88%"></div>
+                                    <div class="absolute -top-6 w-full text-center text-xs font-bold text-gray-600 opacity-0 group-hover:opacity-100">88</div>
+                                </div>
+                                <span class="text-xs text-gray-500 font-bold">ING</span>
+                            </div>
+                            <!-- Bar 4 -->
+                            <div class="w-full flex flex-col items-center gap-1 group">
+                                <div class="w-full bg-blue-100 rounded-t-lg relative h-40 w-8">
+                                    <div class="absolute bottom-0 w-full bg-blue-400 rounded-t-lg transition-all duration-1000" style="height: 60%"></div>
+                                    <div class="absolute -top-6 w-full text-center text-xs font-bold text-gray-600 opacity-0 group-hover:opacity-100">60</div>
+                                </div>
+                                <span class="text-xs text-gray-500 font-bold">FIS</span>
+                            </div>
+                            <!-- Bar 5 -->
+                            <div class="w-full flex flex-col items-center gap-1 group">
+                                <div class="w-full bg-blue-100 rounded-t-lg relative h-40 w-8">
+                                    <div class="absolute bottom-0 w-full bg-yellow-500 rounded-t-lg transition-all duration-1000" style="height: 90%"></div>
+                                    <div class="absolute -top-6 w-full text-center text-xs font-bold text-gray-600 opacity-0 group-hover:opacity-100">90</div>
+                                </div>
+                                <span class="text-xs text-gray-500 font-bold">KIM</span>
+                            </div>
+                            <!-- Bar 6 -->
+                            <div class="w-full flex flex-col items-center gap-1 group">
+                                <div class="w-full bg-blue-100 rounded-t-lg relative h-40 w-8">
+                                    <div class="absolute bottom-0 w-full bg-amber-700 rounded-t-lg transition-all duration-1000" style="height: 85%"></div>
+                                    <div class="absolute -top-6 w-full text-center text-xs font-bold text-gray-600 opacity-0 group-hover:opacity-100">85</div>
+                                </div>
+                                <span class="text-xs text-gray-500 font-bold">SEJ</span>
+                            </div>
+                            <!-- Bar 7 -->
+                            <div class="w-full flex flex-col items-center gap-1 group">
+                                <div class="w-full bg-blue-100 rounded-t-lg relative h-40 w-8">
+                                    <div class="absolute bottom-0 w-full bg-purple-500 rounded-t-lg transition-all duration-1000" style="height: 100%"></div>
+                                    <div class="absolute -top-6 w-full text-center text-xs font-bold text-gray-600 opacity-0 group-hover:opacity-100">100</div>
+                                </div>
+                                <span class="text-xs text-gray-500 font-bold">SNI</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-2 text-center">Grafik berdasarkan rata-rata nilai Tugas, UH, dan UTS semester ini.</p>
+                    </div>
+
+                    <!-- List Nilai -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-gray-700">Riwayat Nilai</h3>
+                            <button class="text-blue-600 text-xs hover:underline">Lihat Transkrip</button>
+                        </div>
+                        <div class="space-y-3 h-64 overflow-y-auto pr-2">
+                            <!-- Item -->
+                            <li class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <div>
+                                    <div class="font-medium text-gray-800">Lukisan Kanvas (Praktek)</div>
+                                    <div class="text-xs text-gray-500">Seni Budaya • 21 Okt 2024</div>
+                                </div>
+                                <div class="text-lg font-bold text-purple-600">100</div>
+                            </li>
+                            <!-- Item -->
+                            <li class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <div>
+                                    <div class="font-medium text-gray-800">Quiz Biologi Bab 3</div>
+                                    <div class="text-xs text-gray-500">Biologi • 20 Okt 2024</div>
+                                </div>
+                                <div class="text-lg font-bold text-emerald-600">95</div>
+                            </li>
+                            <!-- Item -->
+                            <li class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <div>
+                                    <div class="font-medium text-gray-800">UH Matematika</div>
+                                    <div class="text-xs text-gray-500">Matematika • 18 Okt 2024</div>
+                                </div>
+                                <div class="text-lg font-bold text-blue-600">80</div>
+                            </li>
+                            <!-- Item -->
+                            <li class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <div>
+                                    <div class="font-medium text-gray-800">Speaking Practice</div>
+                                    <div class="text-xs text-gray-500">B. Inggris • 15 Okt 2024</div>
+                                </div>
+                                <div class="text-lg font-bold text-rose-600">88</div>
+                            </li>
+                            <!-- Item -->
+                            <li class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <div>
+                                    <div class="font-medium text-gray-800">Hafalan Unsur</div>
+                                    <div class="text-xs text-gray-500">Kimia • 10 Okt 2024</div>
+                                </div>
+                                <div class="text-lg font-bold text-yellow-600">90</div>
+                            </li>
+                            <!-- Item -->
+                            <li class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <div>
+                                    <div class="font-medium text-gray-800">UTS Fisika (Teori)</div>
+                                    <div class="text-xs text-gray-500">Fisika • 05 Okt 2024</div>
+                                </div>
+                                <div class="text-lg font-bold text-red-500">60</div>
+                            </li>
+                             <!-- Item -->
+                             <li class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <div>
+                                    <div class="font-medium text-gray-800">Makalah Sejarah</div>
+                                    <div class="text-xs text-gray-500">Sejarah • 01 Okt 2024</div>
+                                </div>
+                                <div class="text-lg font-bold text-amber-700">85</div>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             <!-- 5. CALENDAR TAB (Simple Placeholder) -->
+             <section id="calendar-tab" class="hidden fade-in">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Kalender Akademik</h2>
+                <div class="bg-white p-8 rounded-xl shadow-sm text-center border border-gray-200">
+                    <i class="fa-regular fa-calendar-check text-6xl text-blue-200 mb-4"></i>
+                    <h3 class="text-lg font-medium text-gray-600">Oktober 2024</h3>
+                    <div class="mt-8 grid grid-cols-7 gap-2 text-sm text-gray-600 max-w-lg mx-auto">
+                        <div class="font-bold">Min</div><div class="font-bold">Sen</div><div class="font-bold">Sel</div><div class="font-bold">Rab</div><div class="font-bold">Kam</div><div class="font-bold">Jum</div><div class="font-bold">Sab</div>
+                        <!-- Dates -->
+                        <div class="p-2 text-gray-300">29</div><div class="p-2 text-gray-300">30</div>
+                        <div class="p-2">1</div><div class="p-2">2</div><div class="p-2">3</div><div class="p-2">4</div><div class="p-2">5</div>
+                        <div class="p-2">6</div><div class="p-2">7</div><div class="p-2">8</div><div class="p-2">9</div><div class="p-2">10</div><div class="p-2">11</div><div class="p-2">12</div>
+                        <div class="p-2">13</div><div class="p-2">14</div><div class="p-2">15</div><div class="p-2">16</div><div class="p-2">17</div><div class="p-2">18</div><div class="p-2">19</div>
+                        <div class="p-2 bg-blue-100 rounded-full text-blue-600 font-bold">20</div><div class="p-2 border border-blue-500 rounded-lg">21</div><div class="p-2">22</div><div class="p-2">23</div><div class="p-2">24</div><div class="p-2">25</div><div class="p-2">26</div>
+                        <div class="p-2">27</div><div class="p-2">28</div><div class="p-2">29</div><div class="p-2">30</div><div class="p-2">31</div>
+                    </div>
+                </div>
+             </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL: Upload Tugas -->
+    <div id="upload-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="closeUploadModal()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fa-solid fa-cloud-arrow-up text-blue-600"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-task-title">Upload Tugas</h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500 mb-4">Silakan unggah file jawaban Anda (PDF/DOCX).</p>
+                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:bg-gray-50 transition cursor-pointer">
+                                    <i class="fa-solid fa-file-arrow-up text-3xl text-gray-400 mb-2"></i>
+                                    <p class="text-xs text-gray-500">Klik untuk memilih file atau drag & drop</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" onclick="submitTask()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+                        Kirim
+                    </button>
+                    <button type="button" onclick="closeUploadModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 transition-transform duration-300 z-50 flex items-center gap-3">
+        <i class="fa-solid fa-circle-check text-green-400"></i>
+        <span id="toast-message">Berhasil!</span>
+    </div>
+
+    <script>
+        // State Management
+        let currentTab = 'dashboard';
+
+        function switchTab(tabId) {
+            // 1. Hide all sections
+            const sections = ['dashboard', 'courses', 'assignments', 'grades', 'calendar'];
+            sections.forEach(sec => {
+                document.getElementById(sec + '-tab').classList.add('hidden');
+                document.getElementById(sec + '-tab').classList.remove('block');
+            });
+
+            // 2. Show selected section
+            const selectedSection = document.getElementById(tabId + '-tab');
+            selectedSection.classList.remove('hidden');
+            selectedSection.classList.add('block');
+
+            // 3. Update Sidebar Active State
+            // Reset all
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active', 'bg-blue-50', 'text-blue-600', 'font-medium');
+                el.classList.add('text-gray-600');
+            });
+            
+            // Set active (handle both desktop and potential mobile duplication logic if strictly separated IDs)
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if(activeBtn) {
+                activeBtn.classList.add('active');
+                activeBtn.classList.remove('text-gray-600');
+            }
+
+            // 4. Update Header Title
+            const titles = {
+                'dashboard': 'Beranda',
+                'courses': 'Kelas Saya',
+                'assignments': 'Daftar Tugas',
+                'grades': 'Rekap Nilai',
+                'calendar': 'Kalender'
+            };
+            document.getElementById('page-title').innerText = titles[tabId];
+            
+            currentTab = tabId;
+        }
+
+        // Mobile Menu Logic
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('mobile-sidebar');
+            const overlay = document.getElementById('mobile-sidebar-overlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                // Open
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                // Close
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // Modal Logic
+        function openUploadModal(taskName) {
+            document.getElementById('modal-task-title').innerText = "Upload: " + taskName;
+            document.getElementById('upload-modal').classList.remove('hidden');
+        }
+
+        function closeUploadModal() {
+            document.getElementById('upload-modal').classList.add('hidden');
+        }
+
+        function submitTask() {
+            closeUploadModal();
+            showMessage('Tugas berhasil dikirim! Menunggu penilaian guru.');
+        }
+
+        function showLogoutModal() {
+            if(confirm("Apakah Anda yakin ingin keluar dari Belajar.id?")) {
+                location.reload(); // Simulating logout
+            }
+        }
+
+        // Utility: Toast Message
+        function showMessage(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            
+            toast.classList.remove('translate-y-20');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20');
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            switchTab('dashboard');
+        });
+    </script>
+</body>
+</html>
