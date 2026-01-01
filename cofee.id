@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KopiKita Official Shop - Kopi & Pastry Murah Meriah</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* --- CSS VARIABLES --- */
+        :root {
+            --primary-brand: #3e2723; /* Dark Coffee branding */
+            --primary-action: #d32f2f; /* Merah "Sale" khas Marketplace */
+            --accent-gold: #ffc107;
+            --bg-body: #f5f5f5;
+            --white: #ffffff;
+            --text-main: #212121;
+            --text-secondary: #757575;
+            --border-color: #e0e0e0;
+            --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+            --shadow-hover: 0 4px 10px 0 rgba(0,0,0,0.1);
+        }
+
+        /* --- RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-size: 14px;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- UTILITIES --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .wrap { flex-wrap: wrap; }
+        .gap-10 { gap: 10px; }
+
+        /* --- HEADER --- */
+        header {
+            background: linear-gradient(-180deg, #4e342e, #3e2723);
+            color: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding-bottom: 10px;
+        }
+
+        .top-bar {
+            font-size: 12px;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .top-links { gap: 15px; }
+        .top-links a:hover { opacity: 0.8; }
+
+        .main-header {
+            padding: 15px 0;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            min-width: 150px;
+        }
+
+        .logo i { color: var(--accent-gold); }
+
+        /* Search Bar Style */
+        .search-container {
+            flex-grow: 1;
+            position: relative;
+            max-width: 800px;
+        }
+
+        .search-box {
+            background: var(--white);
+            border-radius: 2px;
+            padding: 3px;
+            display: flex;
+        }
+
+        .search-input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .search-btn {
+            background: var(--primary-action);
+            border: none;
+            color: var(--white);
+            padding: 0 20px;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .cart-icon {
+            font-size: 24px;
+            position: relative;
+            margin: 0 20px;
+            cursor: pointer;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background: var(--primary-action);
+            color: var(--white);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            border: 2px solid #3e2723;
+        }
+
+        /* --- HERO BANNER --- */
+        .banner-section {
+            margin-top: 20px;
+        }
+
+        .banner-wrapper {
+            background: var(--white);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 5px;
+            height: 280px;
+        }
+
+        .main-banner {
+            background: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') center/cover;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+        }
+
+        .side-banners {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .side-banner {
+            flex: 1;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* --- VOUCHER SECTION (NEW) --- */
+        .voucher-section {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .voucher-card {
+            background: #fff;
+            min-width: 250px;
+            border-left: 4px solid var(--primary-action);
+            padding: 15px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 4px;
+        }
+
+        .voucher-info h4 { color: var(--primary-action); font-size: 14px; }
+        .voucher-info p { font-size: 11px; color: #777; margin-top: 4px; }
+        .btn-claim {
+            background: var(--primary-action);
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+
+        /* --- CATEGORIES (Bulat) --- */
+        .categories-section {
+            margin-top: 20px;
+            background: var(--white);
+            padding: 20px 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .cat-header {
+            padding: 0 20px 15px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .cat-grid {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        .cat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            width: 80px;
+            transition: transform 0.2s;
+        }
+
+        .cat-item:hover { transform: translateY(-3px); }
+
+        .cat-icon {
+            width: 45px;
+            height: 45px;
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--primary-brand);
+            background: #fff;
+        }
+
+        .cat-text {
+            font-size: 12px;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        /* --- FLASH SALE / PROMO --- */
+        .flash-sale {
+            margin-top: 20px;
+            background: var(--white);
+            padding: 15px 20px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .section-title {
+            color: var(--primary-action);
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .timer {
+            background: black;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .see-all {
+            margin-left: auto;
+            color: var(--primary-action);
+            font-size: 13px;
+        }
+
+        /* --- OFFICIAL BRANDS (NEW) --- */
+        .brand-section {
+            margin-top: 20px;
+            background: #fff;
+            padding: 20px;
+        }
+        .brand-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .brand-card {
+            border: 1px solid #eee;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+        }
+        .brand-card img { height: 50px; object-fit: contain; margin-bottom: 10px; }
+        .brand-card h4 { font-size: 13px; }
+
+        /* --- PRODUCT GRID --- */
+        .product-section {
+            padding: 20px 0;
+        }
+
+        .sticky-tabs {
+            position: sticky;
+            top: 70px;
+            background: var(--bg-body);
+            z-index: 900;
+            padding: 10px 0;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            padding: 8px 20px;
+            border-radius: 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-brand);
+            color: var(--white);
+            border-color: var(--primary-brand);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .product-card {
+            background: var(--white);
+            border: 1px solid transparent;
+            border-radius: 2px;
+            transition: all 0.2s;
+            position: relative;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Filter Class */
+        .product-card.hidden { display: none; }
+
+        .product-card:hover {
+            border-color: var(--primary-brand);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            z-index: 2;
+        }
+
+        .p-img-container {
+            position: relative;
+            padding-top: 100%;
+            overflow: hidden;
+        }
+
+        .p-img-container img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        .discount-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 212, 36, 0.9);
+            color: var(--primary-brand);
+            padding: 2px 6px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .special-badge {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: var(--primary-action);
+            color: white;
+            font-size: 10px;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        .p-details { padding: 10px; }
+
+        .p-title {
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--text-main);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            height: 36px;
+            margin-bottom: 5px;
+        }
+
+        .p-tags {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .tag {
+            border: 1px solid var(--primary-action);
+            color: var(--primary-action);
+            font-size: 9px;
+            padding: 0 2px;
+        }
+
+        .p-price {
+            color: var(--primary-action);
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+        }
+
+        .p-price small {
+            color: var(--text-secondary);
+            text-decoration: line-through;
+            font-size: 10px;
+        }
+
+        .p-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .stars { color: var(--accent-gold); }
+
+        /* --- BLOG / ARTIKEL (NEW) --- */
+        .blog-section {
+            margin-top: 30px;
+            background: #fff;
+            padding: 20px;
+        }
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .blog-card { display: flex; gap: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .blog-img { width: 100px; height: 80px; object-fit: cover; border-radius: 4px; }
+        .blog-info h3 { font-size: 14px; margin-bottom: 5px; }
+        .blog-info p { font-size: 11px; color: #777; line-height: 1.4; }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--white);
+            border-top: 4px solid var(--primary-brand);
+            padding-top: 40px;
+            margin-top: 40px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .footer-col h4 {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: rgba(0,0,0,0.65);
+            cursor: pointer;
+        }
+
+        .footer-col ul li:hover { color: var(--primary-action); }
+
+        .copyright {
+            padding: 20px 0;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            background: #fdfdfd;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .banner-wrapper { grid-template-columns: 1fr; height: auto; }
+            .main-banner { height: 180px; }
+            .side-banners { display: none; }
+            .product-grid { grid-template-columns: repeat(2, 1fr); gap: 5px; }
+            .search-box { display: none; }
+            .cat-grid { justify-content: flex-start; gap: 10px; }
+            .sticky-tabs { overflow-x: auto; justify-content: flex-start; padding-left: 10px; }
+            .blog-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="flex justify-between items-center top-bar">
+                <div class="top-links flex">
+                    <a href="#">Seller Centre</a>
+                    <a href="#">Download App</a>
+                    <a href="#">Ikuti Kami di <i class="fab fa-instagram"></i></a>
+                </div>
+                <div class="top-links flex">
+                    <a href="#"><i class="far fa-bell"></i> Notifikasi</a>
+                    <a href="#">Bantuan</a>
+                    <a href="#">Login</a>
+                </div>
+            </div>
+
+            <div class="flex items-center main-header">
+                <a href="#" class="logo">
+                    <i class="fas fa-coffee"></i> KopiKita
+                </a>
+
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" class="search-input" placeholder="Cari kopi robusta termurah...">
+                        <button class="search-btn"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+
+                <div class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge">3</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+
+        <!-- Banner Section -->
+        <section class="banner-section">
+            <div class="banner-wrapper">
+                <div class="main-banner">
+                    <div>
+                        <h2>Festival Belanja Kopi</h2>
+                        <p>Diskon s/d 80% & Gratis Ongkir</p>
+                    </div>
+                </div>
+                <div class="side-banners">
+                    <div class="side-banner" style="background-image: url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80');"></div>
+                    <div class="side-banner" style="background-image: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80');"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories -->
+        <section class="categories-section">
+            <div class="cat-header">KATEGORI PILIHAN</div>
+            <div class="cat-grid">
+                <div class="cat-item">
+                    <div class="cat-icon"><i class="fas fa-mug-hot"></i></div>
+                    <div class="cat-text">Kopi<br>Susu</div>
+                </div>
+                <div class="cat-item">
+                    <div class="cat-icon"><i class="fas fa-seedling"></i></div>
+                    <div class="cat-text">Biji<br>Kopi</div>
+                </div>
+                <div class="cat-item">
+                    <div class="cat-icon"><i class="fas fa-bread-slice"></i></div>
+                    <div class="cat-text">Roti &<br>Kue</div>
+                </div>
+                <div class="cat-item">
+                    <div class="cat-icon"><i class="fas fa-blender"></i></div>
+                    <div class="cat-text">Alat<br>Seduh</div>
+                </div>
+                <div class="cat-item">
+                    <div class="cat-icon"><i class="fas fa-money-bill-wave" style="color: green;"></i></div>
+                    <div class="cat-text">Kopi<br>Murah</div>
+                </div>
+                <div class="cat-item">
+                    <div class="cat-icon"><i class="fas fa-percent" style="color: red;"></i></div>
+                    <div class="cat-text">Diskon<br>50%</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New: Voucher Section -->
+        <div class="voucher-section">
+            <div class="voucher-card">
+                <div class="voucher-info">
+                    <h4>Gratis Ongkir Rp0</h4>
+                    <p>Min. Belanja Rp30RB</p>
+                </div>
+                <button class="btn-claim">Klaim</button>
+            </div>
+            <div class="voucher-card">
+                <div class="voucher-info">
+                    <h4>Cashback 50%</h4>
+                    <p>s/d Rp 10.000 Koin</p>
+                </div>
+                <button class="btn-claim">Klaim</button>
+            </div>
+            <div class="voucher-card">
+                <div class="voucher-info">
+                    <h4>Diskon Kopi 20%</h4>
+                    <p>Khusus Member Baru</p>
+                </div>
+                <button class="btn-claim">Klaim</button>
+            </div>
+        </div>
+
+        <!-- Flash Sale -->
+        <section class="flash-sale">
+            <div class="section-header">
+                <div class="section-title">FLASH <i class="fas fa-bolt"></i> SALE</div>
+                <div class="timer">02</div> : <div class="timer">15</div> : <div class="timer">45</div>
+                <a href="#" class="see-all">Lihat Semua ></a>
+            </div>
+            <div class="product-grid" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));">
+                <!-- FS Item 1 -->
+                <div class="product-card">
+                    <div class="p-img-container">
+                        <img src="https://images.unsplash.com/photo-1559496417-e7f25cb247f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Latte">
+                        <div class="discount-badge">90%</div>
+                    </div>
+                    <div class="p-details">
+                        <div class="p-price">Rp5.000 <small>Rp50.000</small></div>
+                        <div style="height: 4px; background: #ffcdd2; margin-top: 5px;">
+                            <div style="width: 95%; height: 100%; background: var(--primary-action);"></div>
+                        </div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">Segera Habis</div>
+                    </div>
+                </div>
+                <!-- FS Item 2 -->
+                <div class="product-card">
+                    <div class="p-img-container">
+                        <img src="https://images.unsplash.com/photo-1610632380989-680fe40816c6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Beans">
+                        <div class="discount-badge">50%</div>
+                    </div>
+                    <div class="p-details">
+                        <div class="p-price">Rp35.000 <small>Rp70.000</small></div>
+                        <div style="height: 4px; background: #ffcdd2; margin-top: 5px;">
+                            <div style="width: 50%; height: 100%; background: var(--primary-action);"></div>
+                        </div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">Terjual 100+</div>
+                    </div>
+                </div>
+                 <!-- FS Item 3 -->
+                <div class="product-card">
+                    <div class="p-img-container">
+                        <img src="https://images.unsplash.com/photo-1507133750069-412f5260271b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Drip Bag">
+                        <div class="discount-badge">75%</div>
+                    </div>
+                    <div class="p-details">
+                        <div class="p-price">Rp10.000 <small>Rp40.000</small></div>
+                        <div style="height: 4px; background: #ffcdd2; margin-top: 5px;">
+                            <div style="width: 80%; height: 100%; background: var(--primary-action);"></div>
+                        </div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">Terjual 2RB</div>
+                    </div>
+                </div>
+                 <!-- FS Item 4 -->
+                <div class="product-card">
+                    <div class="p-img-container">
+                        <img src="https://images.unsplash.com/photo-1595434091143-b375ced5fe5c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Cup">
+                        <div class="discount-badge">60%</div>
+                    </div>
+                    <div class="p-details">
+                        <div class="p-price">Rp12.000 <small>Rp30.000</small></div>
+                        <div style="height: 4px; background: #ffcdd2; margin-top: 5px;">
+                            <div style="width: 30%; height: 100%; background: var(--primary-action);"></div>
+                        </div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">Sisa 5</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New: Official Brand Section -->
+        <section class="brand-section">
+            <div class="section-header" style="border:none;">
+                <div class="section-title" style="color:#333;">OFFICIAL BRANDS</div>
+                <a href="#" class="see-all">Lihat Semua ></a>
+            </div>
+            <div class="brand-grid">
+                <div class="brand-card">
+                    <h4>HARIO</h4>
+                    <p style="font-size:10px; color:#999;">Alat Kopi Jepang</p>
+                </div>
+                <div class="brand-card">
+                    <h4>OATLY</h4>
+                    <p style="font-size:10px; color:#999;">Susu Gandum</p>
+                </div>
+                <div class="brand-card">
+                    <h4>EXCELSO</h4>
+                    <p style="font-size:10px; color:#999;">Biji Kopi</p>
+                </div>
+                <div class="brand-card">
+                    <h4>BIALETTI</h4>
+                    <p style="font-size:10px; color:#999;">Moka Pot</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product List -->
+        <section class="product-section">
+            <!-- Tabs JS Selector -->
+            <div class="sticky-tabs">
+                <div class="tab-btn active" data-filter="all">Semua</div>
+                <div class="tab-btn" data-filter="laris">Terlaris</div>
+                <div class="tab-btn" data-filter="murah">Termurah</div>
+                <div class="tab-btn" data-filter="beans">Biji Kopi</div>
+                <div class="tab-btn" data-filter="alat">Alat</div>
+            </div>
+
+            <div class="product-grid" id="main-grid">
+                <!-- Item 1 (Laris) -->
+                <div class="product-card" data-category="laris">
+                    <div class="p-img-container">
+                        <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Latte">
+                        <div class="special-badge">Star+</div>
+                    </div>
+                    <div class="p-details">
+                        <div class="p-title">Kopi Susu Gula Aren 1 Liter - Creamy & Strong - Fresh</div>
+                        <div class="p-tags"><span class="tag">Grosir</span></div>
+                        <div class="p-price">Rp45.000</div>
+                        <div class="p-meta"><div class="stars"><i class="fas fa-star"></i> 4.9</div><div>10RB+ Terjual</div></div>
+                        <div style="font-size:10px; color:#999;">Jakarta Selatan</div>
+                    </div>
+                </div>
+
+                <!-- Item 2 (Murah) -->
+                <div class="product-card" data-category="murah">
+                    <div class="p-img-container">
+                        <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Croissant">
+                    </div>
+                    <div class="p-details">
+                        <div class="p-title">Butter Croissant Premium - Renyah (Satuan)</div>
+                        <div class="p-tags"><span class="tag">Diskon 50%</span></div>
+                        <div class="p-price">Rp12.000</div>
+                        <div class="p-meta"><div class="stars"><i class="fas fa-star"></i> 4.8</div><div>2RB+ Terjual</div></div>
+                        <div style="font-size:10px; color:#999;">Jakarta Selatan</div>
+                    </div>
+                </div>
+
+                <!-- Item 3 (Beans) -->
+                <div class="product-card" data-category="beans">
+                    <div class="p-img-container">
+                        <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Beans">
+                        <div class="special-badge">Mall</div>
+                    </div>
+                    <div class="p-details">
+                        <div class="p-title">Biji Kopi Arabika Gayo Wine 200g - House Blend Espresso</div>
+                        <div class="p-price">Rp65.000</div>
+                        <div class="p-meta"><div class="stars"><i class="fas fa-star"></i> 5.0</div><div>500+ Terjual</div></div>
+                        <div style="font-size:10px; color:#999;">Jakarta Selatan</div>
+                    </div>
+                </div>
+
+                <!-- Item 4 (Alat) -->
+                <div class="product-card" data-category="alat">
+                    <div class="p-img-container">
+                        <img src="https://images.unsplash.com/photo-1520978393521-1296062f6b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Hario V60">
+                    </div>
+                    <div class="p-details">
+                        <div class="p-title">V60 Dripper Plastic 01 - Alat Seduh Manual Brew Murah</div>
+                        <div class="p-price">Rp35.000</div>
+                        <div class="p-meta"><div class="stars"><i class="fas fa-star"></i> 4.7</div><div>1RB+ Terjual</div></div>
+                        <div style="font-size:10px; color:#999;">Tangerang</div>
+                    </div>
+                </div>
+
+                <!-- Item 5 (Murah) -->
+                <div class="product-card" data-category="murah">
+                    <div class="p-img-container">
+                        <img src="https://images.unsplash.com/photo-1621267860478-dbdd589372db?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Kopi Sachet">
+                    </div>
+                    <div class="p-details">
+                        <div class="p-title">Kopi Tubruk Robusta Sachet 25gr - Praktis</div>
+                        <div class="p-tags"><span class="tag">Beli 10 Gratis 1</span></div>
+                        <div class="p-price">Rp2.500</div>
+                        <div class="p-meta"><div class="stars"><i class="fas fa-star"></i> 4.5</div><div>5RB+ Terjual</div></div>
+                        <div style="font-size:10px; color:#999;">Bekasi</div>
+                    </div>
+                </div>
+
+                <!-- Item 6 (Laris) -->
+                <div class="product-card" data-category="laris">
+                    <div class="p-img-container">
+                        <img src="https://images.unsplash.com/photo-1517701604599-bb29b5dd7359?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Cold Brew">
+                    </div>
+                    <div class="p-details">
+                        <div class="p-title">Cold Brew Concentrate 250ml - Tanpa Gula Diet Friendly</div>
+                        <div class="p-price">Rp35.000</div>
+                        <div class="p-meta"><div class="stars"><i class="fas fa-star"></i> 4.9</div><div>300+ Terjual</div></div>
+                        <div style="font-size:10px; color:#999;">Jakarta Selatan</div>
+                    </div>
+                </div>
+
+                <!-- Item 7 (Alat) -->
+                <div class="product-card" data-category="alat">
+                    <div class="p-img-container">
+                        <img src="https://images.unsplash.com/photo-1570554807469-8e48b8981666?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="French Press">
+                    </div>
+                    <div class="p-details">
+                        <div class="p-title">French Press 350ml Kaca - Plunger Kopi & Teh</div>
+                        <div class="p-price">Rp55.000</div>
+                        <div class="p-meta"><div class="stars"><i class="fas fa-star"></i> 4.6</div><div>800+ Terjual</div></div>
+                        <div style="font-size:10px; color:#999;">Surabaya</div>
+                    </div>
+                </div>
+
+                <!-- Item 8 (Beans/Murah) -->
+                <div class="product-card" data-category="beans">
+                    <div class="p-img-container">
+                        <img src="https://images.unsplash.com/photo-1559525839-b184a4d698c7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Robusta Beans">
+                    </div>
+                    <div class="p-details">
+                        <div class="p-title">Kopi Robusta Lampung 100g - Pahit Mantap</div>
+                        <div class="p-price">Rp20.000</div>
+                        <div class="p-meta"><div class="stars"><i class="fas fa-star"></i> 4.7</div><div>100+ Terjual</div></div>
+                        <div style="font-size:10px; color:#999;">Lampung</div>
+                    </div>
+                </div>
+
+                <!-- Item 9 (Murah) -->
+                <div class="product-card" data-category="murah">
+                    <div class="p-img-container">
+                        <img src="https://images.unsplash.com/photo-1579306194872-64d3b7bac4c2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Cheesecake">
+                    </div>
+                    <div class="p-details">
+                        <div class="p-title">Slice Cake / Kue Potong Rasa Keju Lembut</div>
+                        <div class="p-price">Rp15.000</div>
+                        <div class="p-meta"><div class="stars"><i class="fas fa-star"></i> 4.8</div><div>50+ Terjual</div></div>
+                        <div style="font-size:10px; color:#999;">Jakarta Barat</div>
+                    </div>
+                </div>
+
+                <!-- Item 10 (Alat) -->
+                <div class="product-card" data-category="alat">
+                    <div class="p-img-container">
+                        <img src="https://images.unsplash.com/photo-1514066558159-fc8c737ef259?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Tumbler">
+                    </div>
+                    <div class="p-details">
+                        <div class="p-title">Tumbler Kopi Tahan Panas 500ml Stainless Steel</div>
+                        <div class="p-price">Rp75.000</div>
+                        <div class="p-meta"><div class="stars"><i class="fas fa-star"></i> 5.0</div><div>20 Terjual</div></div>
+                        <div style="font-size:10px; color:#999;">Jakarta Utara</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button style="padding: 10px 40px; background: white; border: 1px solid #ddd; cursor: pointer; color: #555;">Lihat Lebih Banyak</button>
+            </div>
+        </section>
+
+        <!-- New: Blog Section -->
+        <section class="blog-section">
+            <h3 style="margin-bottom:20px; font-weight:700;">ARTIKEL KOPI PILIHAN</h3>
+            <div class="blog-grid">
+                <div class="blog-card">
+                    <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="blog-img" alt="Blog 1">
+                    <div class="blog-info">
+                        <h3>Cara Menyeduh V60 yang Benar</h3>
+                        <p>Tips agar hasil seduhan manual brew kamu tidak terlalu pahit dan fruity-nya keluar...</p>
+                    </div>
+                </div>
+                <div class="blog-card">
+                    <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="blog-img" alt="Blog 2">
+                    <div class="blog-info">
+                        <h3>Perbedaan Arabika dan Robusta</h3>
+                        <p>Kenali biji kopimu sebelum membeli. Mana yang cocok untuk kopi susu?</p>
+                    </div>
+                </div>
+                <div class="blog-card">
+                    <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="blog-img" alt="Blog 3">
+                    <div class="blog-info">
+                        <h3>Resep Kopi Gula Aren Rumahan</h3>
+                        <p>Bikin sendiri kopi kekinian dengan modal kurang dari 5 ribu rupiah.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Layanan Pelanggan</h4>
+                    <ul>
+                        <li>Bantuan</li>
+                        <li>Metode Pembayaran</li>
+                        <li>Lacak Pesanan Pembeli</li>
+                        <li>Garansi KopiKita</li>
+                        <li>Hubungi Kami</li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Jelajahi KopiKita</h4>
+                    <ul>
+                        <li>Tentang Kami</li>
+                        <li>Karir</li>
+                        <li>Kebijakan Privasi</li>
+                        <li>Blog Kopi</li>
+                        <li>Flash Sale</li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Pembayaran</h4>
+                    <div class="flex wrap gap-10">
+                        <div style="background:#fff; border:1px solid #ddd; padding: 5px; width: 50px; text-align:center; font-size:10px; font-weight:bold;">BCA</div>
+                        <div style="background:#fff; border:1px solid #ddd; padding: 5px; width: 50px; text-align:center; font-size:10px; font-weight:bold;">Mandiri</div>
+                        <div style="background:#fff; border:1px solid #ddd; padding: 5px; width: 50px; text-align:center; font-size:10px; font-weight:bold;">Gopay</div>
+                    </div>
+                    <h4 style="margin-top: 20px;">Pengiriman</h4>
+                    <div class="flex wrap gap-10">
+                         <div style="background:#fff; border:1px solid #ddd; padding: 5px; width: 50px; text-align:center; font-size:10px; font-weight:bold;">JNE</div>
+                         <div style="background:#fff; border:1px solid #ddd; padding: 5px; width: 50px; text-align:center; font-size:10px; font-weight:bold;">J&T</div>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2024 KopiKita Café & Roastery. Hak Cipta Dilindungi.
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Tabs -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const products = document.querySelectorAll('.product-card');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 1. Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // 2. Add active class to clicked tab
+                    tab.classList.add('active');
+
+                    // 3. Get filter category
+                    const category = tab.getAttribute('data-filter');
+
+                    // 4. Filter products
+                    products.forEach(product => {
+                        const productCategory = product.getAttribute('data-category');
+
+                        if (category === 'all') {
+                            product.classList.remove('hidden');
+                        } else {
+                            if (productCategory === category) {
+                                product.classList.remove('hidden');
+                            } else {
+                                product.classList.add('hidden');
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
